@@ -1,0 +1,205 @@
+---
+title: "Cancer Data Using R"
+author: "Carbajal,Daniel"
+date: Sept 12, 2021
+output:
+  
+  word_document: default
+---
+
+
+
+```{r include=TRUE}
+
+
+library(ggplot2)
+library(dplyr)
+
+## Set the working directory to the root of your DSC 520 directory
+setwd("C:/Users/dan35/Documents/DSC520_GitRepository/dsc520/data/BreastCancer/")
+
+breastCancer_df <- read.csv("breast_cancer.csv")
+head(breastCancer_df)
+
+
+# Loop to graph histograms
+names<-names(breastCancer_df)
+names2 = names(breastCancer_df)
+classes<-sapply(breastCancer_df,class)
+
+library(plyr)
+breastCancer_df$diagnosis <- revalue(breastCancer_df$diagnosis, c("M"=1))
+breastCancer_df$diagnosis <- revalue(breastCancer_df$diagnosis, c("B"=0))
+breastCancer_df$diagnosis<- as.numeric(breastCancer_df$diagnosis) 
+head(breastCancer_df$diagnosis)
+
+n = 1
+for(name in names[classes == 'numeric'])
+{
+  
+  cor_data <- (cor(breastCancer_df$diagnosis,breastCancer_df[,name], use="pairwise.complete.obs"))
+  print(names[n])
+  print(cor_data)
+   n = n + 1
+  
+}
+
+library(reshape2)
+melt.df1<-melt(breastCancer_df[3:12])
+melt.df2<-melt(breastCancer_df[13:22])
+melt.df3<-melt(breastCancer_df[23:32])
+
+library(ggplot2)
+ggplot(melt.df1, aes(x = value)) +
+  geom_histogram(aes(y = ..density..),col = "black", fill = "grey",bins=50,na.rm=TRUE) + geom_density(colour = "red") + facet_wrap(~variable, scales="free") + theme_bw() + theme(text = element_text(size = 7)) 
+ggplot(melt.df2, aes(x = value)) +
+  geom_histogram(aes(y = ..density..),col = "black", fill = "grey",bins=50,na.rm=TRUE) + geom_density(colour = "red") + facet_wrap(~variable, scales="free") + theme_bw()  + theme(text = element_text(size = 8)) 
+ggplot(melt.df3, aes(x = value)) +
+  geom_histogram(aes(y = ..density..),col = "black", fill = "grey",bins=50,na.rm=TRUE) + geom_density(colour = "red") + facet_wrap(~variable, scales="free") + theme_bw()  + theme(text = element_text(size = 8)) 
+
+
+ggplot(melt.df1,aes(x = 1:5690, y = value)) + geom_point() + geom_smooth()  + labs(title = paste("Scatterplot of ","thy"), x = "point", y = "value") + facet_wrap(~variable, scales="free") + theme_bw()  + theme(text = element_text(size = 8))
+ggplot(melt.df2,aes(x = 1:5690, y = value)) + geom_point() + geom_smooth()  + labs(title = paste("Scatterplot of ","thy"), x = "point", y = "value") + facet_wrap(~variable, scales="free") + theme_bw()  + theme(text = element_text(size = 8))
+ggplot(melt.df3,aes(x = 1:5690, y = value)) + geom_point() + geom_smooth()  + labs(title = paste("Scatterplot of ","thy"), x = "point", y = "value") + facet_wrap(~variable, scales="free") + theme_bw()  + theme(text = element_text(size = 8))
+
+breastCancer_Malignant_df <- subset(breastCancer_df, breastCancer_df$diagnosis == 1)
+melt.Mdf1<-melt(breastCancer_Malignant_df[3:12])
+melt.Mdf2<-melt(breastCancer_Malignant_df[13:22])
+melt.Mdf3<-melt(breastCancer_Malignant_df[23:32])
+
+ggplot(melt.Mdf1, aes(x = value)) +
+  geom_histogram(aes(y = ..density..),col = "black", fill = "grey",bins=50,na.rm=TRUE) + geom_density(colour = "red") + facet_wrap(~variable, scales="free") + theme_bw() + theme(text = element_text(size = 7)) 
+ggplot(melt.Mdf2, aes(x = value)) +
+  geom_histogram(aes(y = ..density..),col = "black", fill = "grey",bins=50,na.rm=TRUE) + geom_density(colour = "red") + facet_wrap(~variable, scales="free") + theme_bw()  + theme(text = element_text(size = 8)) 
+ggplot(melt.Mdf3, aes(x = value)) +
+  geom_histogram(aes(y = ..density..),col = "black", fill = "grey",bins=50,na.rm=TRUE) + geom_density(colour = "red") + facet_wrap(~variable, scales="free") + theme_bw()  + theme(text = element_text(size = 8)) 
+
+
+
+breastCancer_Benign_df <- subset(breastCancer_df, breastCancer_df$diagnosis == 0)
+melt.Bdf1<-melt(breastCancer_Benign_df[3:12])
+melt.Bdf2<-melt(breastCancer_Benign_df[13:22])
+melt.Bdf3<-melt(breastCancer_Benign_df[23:32])
+
+ggplot(melt.Bdf1, aes(x = value)) +
+  geom_histogram(aes(y = ..density..),col = "black", fill = "grey",bins=50,na.rm=TRUE) + geom_density(colour = "red") + facet_wrap(~variable, scales="free") + theme_bw() + theme(text = element_text(size = 7)) 
+ggplot(melt.Bdf2, aes(x = value)) +
+  geom_histogram(aes(y = ..density..),col = "black", fill = "grey",bins=50,na.rm=TRUE) + geom_density(colour = "red") + facet_wrap(~variable, scales="free") + theme_bw()  + theme(text = element_text(size = 8)) 
+ggplot(melt.Bdf3, aes(x = value)) +
+  geom_histogram(aes(y = ..density..),col = "black", fill = "grey",bins=50,na.rm=TRUE) + geom_density(colour = "red") + facet_wrap(~variable, scales="free") + theme_bw()  + theme(text = element_text(size = 8)) 
+
+ggplot(melt.Mdf1,aes(x = 1:2120, y = value)) + geom_point() + geom_smooth()  + labs(title = paste("Scatterplot of ","thy"), x = "point", y = "value") + facet_wrap(~variable, scales="free") + theme_bw()  + theme(text = element_text(size = 8))
+ggplot(melt.Mdf2,aes(x = 1:2120, y = value)) + geom_point() + geom_smooth()  + labs(title = paste("Scatterplot of ","thy"), x = "point", y = "value") + facet_wrap(~variable, scales="free") + theme_bw()  + theme(text = element_text(size = 8))
+ggplot(melt.Mdf3,aes(x = 1:2120, y = value)) + geom_point() + geom_smooth()  + labs(title = paste("Scatterplot of ","thy"), x = "point", y = "value") + facet_wrap(~variable, scales="free") + theme_bw()  + theme(text = element_text(size = 8))
+
+
+ggplot(melt.Bdf1,aes(x = 1:3570, y = value)) + geom_point() + geom_smooth()  + labs(title = paste("Scatterplot of ","thy"), x = "point", y = "value") + facet_wrap(~variable, scales="free") + theme_bw()  + theme(text = element_text(size = 8))
+ggplot(melt.Bdf2,aes(x = 1:3570, y = value)) + geom_point() + geom_smooth()  + labs(title = paste("Scatterplot of ","thy"), x = "point", y = "value") + facet_wrap(~variable, scales="free") + theme_bw()  + theme(text = element_text(size = 8))
+ggplot(melt.Bdf3,aes(x = 1:3570, y = value)) + geom_point() + geom_smooth()  + labs(title = paste("Scatterplot of ","thy"), x = "point", y = "value") + facet_wrap(~variable, scales="free") + theme_bw()  + theme(text = element_text(size = 8))
+
+## Will now use logistic regression to will all variables to see which variables are significant
+
+## Set the working directory to the root of your DSC 520 directory
+setwd("C:/Users/dan35/Documents/DSC520_GitRepository/dsc520/data/BreastCancer/")
+
+breastCancer_df <- read.csv("breast_cancer.csv")
+
+#breastCancer_df$ndiagnosis[breastCancer_df$diagnosis  == "M"] <- 1
+#breastCancer_df$ndiagnosis[breastCancer_df$diagnosis == "B"] <- 0
+#breastCancer_df$ndiagnosis <- factor(breastCancer_df$ndiagnosis)
+
+library(plyr)
+breastCancer_df$diagnosis <- revalue(breastCancer_df$diagnosis, c("M"=1))
+breastCancer_df$diagnosis <- revalue(breastCancer_df$diagnosis, c("B"=0))
+breastCancer_df$diagnosis<- as.numeric(breastCancer_df$diagnosis) 
+#breastCancer_df$diagnosis<- factor(breastCancer_df$diagnosis) 
+
+glm_bc0 <- glm(diagnosis ~ radius_mean + texture_mean + perimeter_mean + area_mean + smoothness_mean + compactness_mean + concavity_mean + 
+                  symmetry_mean + concavity_se + fractal_dimension_mean + radius_se + texture_se + perimeter_se + area_se + smoothness_se + 
+                  compactness_se + symmetry_se + fractal_dimension_se + radius_worst + texture_worst + perimeter_worst + area_worst + 
+                  smoothness_worst + compactness_worst + concavity_worst + symmetry_worst + fractal_dimension_worst, data=breastCancer_df, family=binomial())
+
+summary(glm_bc0)
+
+glm_bc1<- glm(diagnosis ~ texture_mean + perimeter_mean + smoothness_mean +  compactness_mean + symmetry_se + radius_worst + texture_worst + area_worst + 
+                  smoothness_worst + compactness_worst,data=breastCancer_df,family=binomial())
+
+summary(glm_bc1)
+
+anova(glm_bc0, glm_bc1, test="Chisq") 
+
+# predict the test dataset
+pred1 <- predict(glm_bc0, breastCancer_df, type="response") 
+
+predicted1 <- round(pred1) # round of the value; >0.5 will convert to  1 else 0
+# Creating a contigency table
+tab <- table(Predicted = predicted1, Reference = breastCancer_df$diagnosis)
+tab
+
+##Predicted FALSE TRUE
+##0          390   67
+##1           10    3
+
+
+accuracy1 <- (354+207) / (354+207+3+5)
+accuracy1*100
+
+# predict the test dataset
+pred2 <- predict(glm_bc1, breastCancer_df, type="response") 
+
+predicted2 <- round(pred2) # round of the value; >0.5 will convert to  1 else 0
+# Creating a contigency table
+tab2<- table(Predicted = predicted2, Reference = breastCancer_df$diagnosis)
+tab2
+
+##Predicted FALSE TRUE
+##0          390   67
+##1           10    3
+##Reference
+
+accuracy2 <- (353+202) / (353+202+3+10)
+accuracy2*100
+
+## Run a clustering algorithm on the data 
+
+library(gmodels)
+library(ggplot2)
+library(cluster)
+library(ClusterR)
+library(ggpubr)
+library(factoextra)
+##Fit the dataset using the k-means algorithm from k=2 to k=12. Create a scatter plot of the resultant clusters for each value of k.**
+  
+set.seed(20)
+k_values <- c(2:12)
+total_withinss <- NULL
+avg_distance <- NULL
+for (i in 1:length(k_values))
+{
+  temp_df <- breastCancer_df[2:32]
+  clusters <- kmeans(temp_df, k_values[i])
+  temp_df$cluster <- as.factor(clusters$cluster)
+  x_dist <- clusters$centers[temp_df$cluster] - temp_df$x
+  y_dist <- clusters$centers[temp_df$cluster] - temp_df$y
+  tot_dist <- sqrt((x_dist ** 2) + (y_dist ** 2))
+  avg_distance <- c(avg_distance, mean(tot_dist))
+  total_withinss <- c(total_withinss, clusters$tot.withinss)
+}
+
+withinss_elbow_df <- data.frame(k_values, total_withinss)
+withinss_elbow_df
+ggplot(data = withinss_elbow_df, aes(x=k_values, y=total_withinss)) + xlab("Number of clusters K") + ylab("Total within-clusters sum of squares") + theme_bw() + geom_point() + geom_line(color = "red")
+
+kmodel <- kmeans(temp_df, 5)
+kmodel$cluster = as.numeric(kmodel$cluster)
+temp_df$cluster <- as.numeric(clusters$cluster)
+library(factoextra)
+fviz_cluster(kmodel, data = temp_df)
+
+
+```
+
+
+
+
+
